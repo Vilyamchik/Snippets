@@ -1,9 +1,5 @@
 {% load static %}
 <header>
-    <a href="{% url 'index' %}">Главная</a>
-    <a href="{% url 'add_snippet' %}">Добавить сниппет</a>
-    <a href="{% url 'snippets_list' %}">Посмотреть сниппеты</a>
-
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <div class="container">
             <a class="navbar-brand" href="/">
@@ -17,12 +13,12 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav mr-auto">
                     <li class="form-inline">
-                        <a class="btn btn-outline-secondary" href="{% url 'add_snippet' %}">
+                        <a class="btn btn-outline-secondary" href="{% url "snippets-add" %}">
                             Добавить сниппет
                         </a>
                     </li>
                     <li class="form-inline">
-                        <a class="btn btn-outline-info" href="{% url 'snippets_list' %}">
+                        <a class="btn btn-outline-info" href="{% url "snippets-list" %}">
                             Посмотреть сниппеты
                         </a>
                     </li>

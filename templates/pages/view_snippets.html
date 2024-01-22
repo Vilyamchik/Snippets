@@ -1,62 +1,63 @@
-{% extends 'base.html' %}
-
-{% block title %}
-    {{ pagename }}
-{% endblock %}
+{% extends "base.html" %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col text-center">
-                <h1>{{ pagename }}</h1>
-                <hr>
-            </div>
-        </div>
 
-        <div class="row">
-            <div class="col">
-                <p>На данной страницы будут отображаться все созданные сниппеты.</p>
-                <p>Пока тут просто пример, но скоро заменим реальными сниппетами из БД!</p>
-                <hr>
-            </div>
+<!-- Begin page content -->
+<div class="container">
+    <div class="row">
+        <div class="col text-center">
+            <h1>{{ pagename }}</h1>
+            <hr>
         </div>
+    </div>
 
-        <div class="row">
-            <div class="col">
-                <table class="table table-striped">
-                    <thead class="thead-dark">
+    <div class="row">
+        <div class="col">
+            <p>На данной страницы будут отображаться все созданные сниппеты.</p>
+            <p>Пока тут просто пример, но скоро заменим реальными сниппетами из БД!</p>
+            <hr>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <table class="table table-striped">
+                <thead class="thead-dark">
                     <tr>
                         <th scope="col">ID</th>
                         <th scope="col">Название</th>
                         <th scope="col">Дата создания</th>
+                        <th scope="col"></th> <!-- Добавляем пустую ячейку для кнопки удаления -->
                     </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td scope="row">1</td>
-                        <td><a href="/snippets/1">Пример сниппета</a></td>
-                        <td>23.05.2019 11:32</td>
-                    </tr>
-                    <tr>
-                        <td scope="row">2</td>
-                        <td><a href="/snippets/2">И ещё один пример</a></td>
-                        <td>23.05.2019 11:34</td>
-                    </tr>
-                    <tbody>
-                        {% for snippet in snippets %}
+                </thead>
+                <tbody>
+                    {% for snippet in snippets %}
                         <tr>
                             <td scope="row">{{ snippet.id }}</td>
-                            <td><a href="/snippet/{{ snippet.id }}">{{ snippet.title }}</a></td>
-                            <td>{{ snippet.created_date }}</td>
+                            <td>
+                                <a href="{% url "snippet-detail" snippet.id %}">{{ snippet.name }}</a>
+                            </td>
+                            <td>{{ snippet.creation_date }}</td>
+                            <td>
+                                <a href="{% url "editSnippet" snippet.id %}" class="btn btn-primary">Редактировать</a>
+                            </td>
+                            <td>
+                                <form action="{% url 'delete-snippet' snippet.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button class="btn btn-danger" type="submit">Удалить</button>
+                                </form>
+                            </td>
                         </tr>
-                        {% endfor %}
-                    </tbody>
-                    </tbody>
-                </table>
-                <div align="right">
-                    <i style="color: gray;">Всего сниппетов: 2</i>
-                </div>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div align="right">
+                <i style="color: gray;">Всего сниппетов: 2</i>
             </div>
         </div>
     </div>
+</div>
+
+
+
 {% endblock %}
