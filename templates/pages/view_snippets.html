@@ -3,6 +3,7 @@
 {% block content %}
 
 <!-- Begin page content -->
+
 <div class="container">
     <div class="row">
         <div class="col text-center">
@@ -15,6 +16,13 @@
         <div class="col">
             <p>На данной страницы будут отображаться все созданные сниппеты.</p>
             <p>Пока тут просто пример, но скоро заменим реальными сниппетами из БД!</p>
+            {% if request.user.is_authenticated %}
+            <li class="form-inline">
+                <a class="btn btn-outline-success" href="{% url "my-snippets" %}">
+                    Мои сниппеты
+                </a>
+            </li>
+            {% endif %}
             <hr>
         </div>
     </div>
@@ -23,34 +31,33 @@
         <div class="col">
             <table class="table table-striped">
                 <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Название</th>
-                        <th scope="col">Дата создания</th>
-                        <th scope="col"></th> <!-- Добавляем пустую ячейку для кнопки удаления -->
-                    </tr>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Название</th>
+                    <th scope="col">Дата создания</th>
+                    <th scope="col">Пользователь</th>
+                </tr>
                 </thead>
-                <tbody>
-                    {% for snippet in snippets %}
-                        <tr>
-                            <td scope="row">{{ snippet.id }}</td>
-                            <td>
-                                <a href="{% url "snippet-detail" snippet.id %}">{{ snippet.name }}</a>
-                            </td>
-                            <td>{{ snippet.creation_date }}</td>
-                            <td>
-                                <a href="{% url "editSnippet" snippet.id %}" class="btn btn-primary">Редактировать</a>
-                            </td>
-                            <td>
-                                <form action="{% url 'delete-snippet' snippet.id %}" method="post">
-                                    {% csrf_token %}
-                                    <button class="btn btn-danger" type="submit">Удалить</button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+<tbody>
+    {% for snippet in snippets %}
+        <tr>
+            <td scope="row">{{ snippet.id }}</td>
+            <td>
+                <a href="{% url "snippet-detail" snippet.id %}">{{ snippet.name }}</a>
+                {% if request.user.is_authenticated and snippet.user == request.user %}
+                    <a href="{% url "snippet-delete" snippet.id %}">
+                        <i style="color:red" class="fa-solid fa-trash"></i>
+                    </a>
+                    <a href="{% url "snippet-edit" snippet.id %}">
+                        <i style="color:red" class="fas fa-edit"></i>
+                    </a>
+                {% endif %}
+            </td>
+            <td>{{ snippet.creation_date | date:'d-m-Y H:i' }}</td>
+            <td>{{ snippet.user.username }}</td>
+        </tr>
+    {% endfor %}
+</tbody>
             <div align="right">
                 <i style="color: gray;">Всего сниппетов: 2</i>
             </div>
@@ -58,6 +65,4 @@
     </div>
 </div>
 
-
-
-{% endblock %}
+{% endblock  %}
