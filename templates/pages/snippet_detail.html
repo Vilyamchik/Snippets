@@ -16,6 +16,7 @@
         <div class="col">
             {% if type == 'view' %}
                 <fieldset disabled>
+                    <!-- Ваш код для просмотра сниппета -->
                     <div class="row disabled">
                         <div class="col col-6">
                             Название: <input type="text" value="{{ snippet.name }}" class="form-control">
@@ -34,9 +35,7 @@
                                 <p>
                                     {{ snippet.code }}
                                 </p>
-                
                             </div>
-                
                         </div>
                     </div>
                 </fieldset>    
@@ -53,7 +52,7 @@
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col">
+                        <div class="col-6">
                             <div class="p-2 h-100" style="border:1px solid #ced4da; border-radius:5px;">
                                 <textarea name="code">
                                     {{ snippet.code }}
@@ -61,8 +60,46 @@
                             </div>             
                         </div>
                     </div>
-                    <button type="submit">Обновить</button>
+                    <hr>
+                    <div class="row">
+                        <div class="col-2">
+                            <div class="p-2 h-100" style="border:1px solid #ced4da; border-radius:5px;">
+                                <input name="public" type="checkbox" value="True"
+                                {% if snippet.public %} checked {% endif %} > Public / Private
+                            </div>             
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group row">
+                        <div class="col-4">
+                            <input type="submit" class="btn btn-primary btn-block" value="Сохранить">
+                        </div>
+                    </div>
                 </form>
+                
+                <!-- Форма для написания комментария -->
+                <form action="{% url 'comment_add'  %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="comment_text">Текст комментария:</label>
+                        <textarea name="text" id="comment_text" class="form-control" rows="4">{{ comment_form.text.value }}</textarea>
+                    </div>
+                    <button type="submit">Добавить</button>
+                </form>
+                
+                <!-- Таблица с комментариями -->
+                <table border="1">
+                    <tr>
+                        <th>Автор</th>
+                        <th>Комментарий</th>
+                    </tr>
+                    {% for comment in comments %}
+                        <tr>
+                            <td>{{comment.author.username}}</td>
+                            <td>{{comment.text}}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
              {% endif %}
         </div>
     </div>
